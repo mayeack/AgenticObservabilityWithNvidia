@@ -20,7 +20,7 @@ workshop overlay from this repository, publicly reachable at its own `acpN.<zone
 |---|---|---|
 | 1 | `https://acpN.<zone>/api/health` returns 200 through the tunnel, with the access key | `curl -su "acp:$KEY" https://acpN.<zone>/api/health` |
 | 2 | Every path returns 401 without the access key | `curl -sI https://acpN.<zone>/` → 401 |
-| 3 | `nvidia-smi` reports **4× NVIDIA L40S**; the Lightning NIM and the Embed NIM are each pinned to their GPU and both `/v1/health/ready` return 200 | ssh to the box, §8 |
+| 3 | `nvidia-smi` reports **1× NVIDIA L40S** with both NIM processes resident on it, and both `/v1/health/ready` return 200 | ssh to the box, §8 |
 | 4 | `git -C /opt/Retail-Agentic-Commerce status --porcelain` is **empty** — the blueprint is as shipped | §8 |
 | 5 | A storefront search produces a trace in Splunk AO project `RetailAgenticCommerce`, agent stream `acpN` | Splunk AO console |
 | 6 | The same search produces `otel:traces` events in the Splunk index with `deployment.environment=acpN` | Splunk search |
@@ -56,7 +56,7 @@ Criteria 5–7 are the three additions. A box that passes 1–4 only is a workin
 | Requirement | Value / check |
 |---|---|
 | AWS account | Confirm with `aws sts get-caller-identity --profile <profile>` before anything costs money |
-| Service quota | *Running On-Demand G and VT instances* (`L-DB2E81BA`) ≥ **48 vCPU per box** (`g6e.12xlarge` = 48 vCPU). Increases take hours to days; request first |
+| Service quota | *Running On-Demand G and VT instances* (`L-DB2E81BA`) ≥ **16 vCPU per box** (`g6e.4xlarge`). The account's grant is 32 vCPU (increase case closed 2026-07-28), so two boxes can run at once; a third needs an increase, which takes hours to days |
 | Security group | SSH (22) from the operator IP only. No other inbound rule — the tunnel dials out |
 | NGC | An NGC API key with access to `nvcr.io/nim/nvidia/nemotron-3.5-lightning-30b-a3b` and `nvcr.io/nim/nvidia/nemotron-3-embed-1b` |
 | Splunk AO | A project `RetailAgenticCommerce`; one agent stream per box (`acpN`); an API key |
@@ -69,17 +69,19 @@ Criteria 5–7 are the three additions. A box that passes 1–4 only is a workin
 
 | Property | Value | Rationale |
 |---|---|---|
-| Instance type | `g6e.12xlarge` | 48 vCPU, 384 GiB, **4× L40S 48 GB**, 100 Gbps. The NIM support matrix lists L40S for Nemotron 3.5 Lightning (BF16 TP≥2 or W4A16 on one card) and for Nemotron 3 Embed 1B |
+| Instance type | `g6e.4xlarge` | 16 vCPU, 128 GiB, **1× L40S 48 GB**, 20 Gbps, $3.00/hr. The NIM support matrix lists L40S for Nemotron 3.5 Lightning (W4A16 on one card, ≥32 GB) and for Nemotron 3 Embed 1B (~4 GB); both share the card |
 | Region | `us-east-1` | quota and pricing reference |
 | AMI | Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 22.04), resolved at launch from SSM `/aws/service/deeplearning/ami/x86_64/base-oss-nvidia-driver-gpu-ubuntu-22.04/latest/ami-id` | driver, Docker, and NVIDIA Container Toolkit preinstalled; no reboot in the bootstrap |
-| Root volume | **300 GB gp3**, `DeleteOnTermination=true` | NIM caches (~63 GB for Lightning BF16, less for W4A16), NIM images (~15 GB each), blueprint images, Milvus. Keep `LOCAL_NIM_CACHE=/opt/nim-cache` on EBS so a stop/start does not re-download models; the 1.9 TB NVMe instance store is ephemeral |
+| Root volume | **300 GB gp3**, `DeleteOnTermination=true` | NIM caches (~63 GB for Lightning BF16, less for W4A16), NIM images (~15 GB each), blueprint images, Milvus. Keep `LOCAL_NIM_CACHE=/opt/nim-cache` on EBS so a stop/start does not re-download models; the 600 GB NVMe instance store is ephemeral |
 | Login | user `ubuntu`, SSH 22 | |
 | Tags | `acp-workshop=true`, `Replica=N`, `Name=acp-N` | `Replica` drives the tunnel name, subdomain, agent stream, and `WORKSHOP_ENVIRONMENT` |
 
 **GPU placement.** The blueprint pins the Lightning NIM to GPU 0 and the Embed NIM to GPU 1 (`docker-compose-nim.yml`).
-On a 48 GB card NIM must select the W4A16 profile for Lightning; if `nemotron-lightning` fails to become ready, apply the
-commented `NIM_TENSOR_PARALLEL_SIZE=2` / `device_ids: ['0','1']` override in `deploy/compose/docker-compose.workshop.yml`
-and move `embedqa` to GPU 2. Milvus runs on the CPU.
+On a one-GPU box the overlay (`deploy/compose/docker-compose.workshop.yml`) re-pins **both** NIMs to GPU 0 with `!override`,
+starts the embed NIM first (`depends_on: service_healthy`), and caps Lightning's KV cache with `NIM_KVCACHE_PERCENT`
+(default 0.6) so its W4A16 profile leaves room for the ~4 GB embed NIM. Validate on first boot (§8). If Lightning
+cannot fit, the fallback is the blueprint's own hybrid mode: `NIM_EMBED_BASE_URL=https://integrate.api.nvidia.com/v1`
+with a build.nvidia.com key, keeping only the LLM local. Milvus runs on the CPU.
 
 ---
 
@@ -162,7 +164,7 @@ aws service-quotas get-service-quota --service-code ec2 --quota-code L-DB2E81BA 
 # 1. launch (300 GB gp3, the DL Base GPU AMI, SSH-only SG, tags Replica=N)
 AMI=$(aws ssm get-parameter --name /aws/service/deeplearning/ami/x86_64/base-oss-nvidia-driver-gpu-ubuntu-22.04/latest/ami-id \
       --query Parameter.Value --output text --profile "$PROFILE")
-aws ec2 run-instances --image-id "$AMI" --instance-type g6e.12xlarge --key-name acp-workshop \
+aws ec2 run-instances --image-id "$AMI" --instance-type g6e.4xlarge --key-name acp-workshop \
   --security-group-ids "$SG" --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=300,VolumeType=gp3,DeleteOnTermination=true}' \
   --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=acp-$N},{Key=acp-workshop,Value=true},{Key=Replica,Value=$N}]" \
   --profile "$PROFILE"
@@ -187,7 +189,7 @@ ssh -i ~/.ssh/acp_workshop ubuntu@<ip> \
 ## 8. Validation
 
 ```bash
-nvidia-smi                                                       # 4x L40S; NIM processes on GPU 0 and 1
+nvidia-smi                                                       # 1x L40S; both NIM processes on GPU 0
 curl -sf localhost:8010/v1/health/ready && curl -sf localhost:8011/v1/health/ready
 curl -sf localhost/api/health
 git -C /opt/Retail-Agentic-Commerce status --porcelain           # must print nothing
@@ -211,11 +213,11 @@ agent stream name — the four values the setup page and the facilitator email n
 
 | Per box | 8 h/workshop day | 8 h/weekday (~176 h/mo) | always-on |
 |---|---|---|---|
-| `g6e.12xlarge` compute ($10.49/hr) | ~$84 | ~$1,846 | ~$7,650 |
+| `g6e.4xlarge` compute ($3.00/hr) | ~$24 | ~$528 | ~$2,190 |
 | EBS 300 GB gp3 (billed even while stopped) | — | ~$24 | ~$24 |
 | Cloudflare tunnel / CNAMEs | $0 | $0 | $0 |
 
-A box left running is ~$250/day. Install the start/stop schedule the day the box is built; only `terminate` stops
+A box left running is ~$72/day. Install the start/stop schedule the day the box is built; only `terminate` stops
 compute billing, and teardown is incomplete until the CNAME and `cloudflared tunnel delete acp-N` are done too.
 
 ---
@@ -232,7 +234,7 @@ compute billing, and teardown is incomplete until the CNAME and `cloudflared tun
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `nemotron-lightning` restarts, log says no compatible profile | one L40S is not enough for the auto-selected profile | apply the TP2 override in the overlay (§3) |
+| `nemotron-lightning` restarts with an out-of-memory or profile error | Lightning cannot fit beside the embed NIM on the 48 GB card | lower `NIM_KVCACHE_PERCENT` (0.5), or switch embeddings to the hosted endpoint (§3) |
 | Storefront works but no traces in Splunk AO | `SPLUNK_AO_API_KEY` empty, or wrong endpoint host (`console.` instead of `api.`) | fix `.env.workshop`, `docker compose restart` the four agents |
 | Traces in Splunk AO but nothing in Splunk | collector cannot reach HEC, or index not allowed for the token | `docker logs otel-collector`; check `send_failed` metric; validate token/index |
 | Every search fails after enabling the gateway | gateway rejects the bearer credential or cannot reach `nimN.<zone>` | test the gateway with `curl` and the gateway key; check Caddy bearer token; fall back to `--profile local-gateway` |

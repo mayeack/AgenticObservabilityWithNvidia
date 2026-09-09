@@ -25,7 +25,7 @@ Use the storefront as a shopper, watch the four agents work, and confirm that wh
 
 ## Background
 
-The NVIDIA Retail Agentic Commerce blueprint is deployed from its own three Docker Compose files on a single AWS `g6e.12xlarge` (four NVIDIA L40S GPUs). The **Nemotron 3.5 Lightning** NIM serves every agent's reasoning from GPU 0 and the **Nemotron 3 Embed** NIM serves retrieval from GPU 1; Milvus, Postgres, and the application services run on the CPU. Nothing in the checkout is patched; the workshop's additions arrive as a fourth Compose file laid beside it.
+The NVIDIA Retail Agentic Commerce blueprint is deployed from its own three Docker Compose files on a single AWS `g6e.4xlarge` with one NVIDIA L40S. The **Nemotron 3.5 Lightning** NIM serves every agent's reasoning and the **Nemotron 3 Embed** NIM serves retrieval, both resident on that one GPU; Milvus, Postgres, and the application services run on the CPU. Nothing in the checkout is patched; the workshop's additions arrive as a fourth Compose file laid beside it.
 
 The blueprint already emits OpenTelemetry spans: every agent's YAML ships a Phoenix exporter under `general.telemetry.tracing`. That is the hook every later lab uses. In this lab you see the agents from the shopper's side and from the blueprint's own trace viewer, so that in Lab 2 you can recognise the same spans in Splunk.
 
@@ -79,7 +79,7 @@ The facilitator's screenshot shows `docker compose ps` on the instance: the blue
 
 ![alt text](/images/image-13.png)
 
-`nvidia-smi` on the instance: four NVIDIA L40S. GPU 0 holds the Nemotron 3.5 Lightning NIM, GPU 1 the Nemotron 3 Embed NIM. This is the AI factory in miniature — NVIDIA's models, NVIDIA's inference microservices, on NVIDIA GPUs, in AWS.
+`nvidia-smi` on the instance: one NVIDIA L40S with two NIM processes resident — the Nemotron 3.5 Lightning NIM on a 4-bit weight profile with its KV cache capped, and the Nemotron 3 Embed NIM beside it. This is the AI factory in miniature — NVIDIA's models, NVIDIA's inference microservices, on an NVIDIA GPU, in AWS, for the price of a mid-size CPU instance.
 
 #### 1.2.3 NIM Health
 

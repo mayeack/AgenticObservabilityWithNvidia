@@ -17,7 +17,7 @@ Everything on the box is rebuilt from two public repos plus the hand-over files 
 | Item | Value |
 |---|---|
 | Account / profile | _fill in_ |
-| Instance ID / type / AZ | _fill in_ / `g6e.12xlarge` / _fill in_ |
+| Instance ID / type / AZ | _fill in_ / `g6e.4xlarge` (1× L40S) / _fill in_ |
 | AMI | _fill in (SSM latest at launch time)_ |
 | Root volume | 300 GB gp3 |
 | Security group | _fill in_ — SSH from operator IP only |
@@ -124,6 +124,8 @@ Spec §1 table, criteria 1–9. Record the date and the person who verified in t
 
 - Compose resolves the overlay's relative paths against the blueprint directory — which is why the overlay uses
   `${WORKSHOP_DIR}` everywhere. Do not "fix" the paths to be relative.
+- The overlay's `devices: !override` needs Docker Compose ≥ 2.24 (`docker compose version`); older versions append the
+  blueprint's GPU 1 reservation and the embed NIM fails on a one-GPU box.
 - `env_file` entries must exist before `docker compose up`; an empty `.env.workshop` starts the agents without
   exporters and they log a warning per exporter rather than failing.
 - Both `nvidia-nat` exporters are registered by `nvidia-nat-opentelemetry`; `nat info components -t telemetry_exporter`

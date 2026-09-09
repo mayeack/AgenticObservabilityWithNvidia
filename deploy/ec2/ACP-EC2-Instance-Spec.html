@@ -45,7 +45,7 @@ value in §6.1 must differ per box.</p>
 </tr>
 <tr>
 <td>3</td>
-<td><code>nvidia-smi</code> reports <strong>4× NVIDIA L40S</strong>; the Lightning NIM and the Embed NIM are each pinned to their GPU and both <code>/v1/health/ready</code> return 200</td>
+<td><code>nvidia-smi</code> reports <strong>1× NVIDIA L40S</strong> with both NIM processes resident on it, and both <code>/v1/health/ready</code> return 200</td>
 <td>ssh to the box, §8</td>
 </tr>
 <tr>
@@ -153,7 +153,7 @@ value in §6.1 must differ per box.</p>
 </tr>
 <tr>
 <td>Service quota</td>
-<td><em>Running On-Demand G and VT instances</em> (<code>L-DB2E81BA</code>) ≥ <strong>48 vCPU per box</strong> (<code>g6e.12xlarge</code> = 48 vCPU). Increases take hours to days; request first</td>
+<td><em>Running On-Demand G and VT instances</em> (<code>L-DB2E81BA</code>) ≥ <strong>16 vCPU per box</strong> (<code>g6e.4xlarge</code>). The account's grant is 32 vCPU (increase case closed 2026-07-28), so two boxes can run at once; a third needs an increase, which takes hours to days</td>
 </tr>
 <tr>
 <td>Security group</td>
@@ -190,8 +190,8 @@ value in §6.1 must differ per box.</p>
 <tbody>
 <tr>
 <td>Instance type</td>
-<td><code>g6e.12xlarge</code></td>
-<td>48 vCPU, 384 GiB, <strong>4× L40S 48 GB</strong>, 100 Gbps. The NIM support matrix lists L40S for Nemotron 3.5 Lightning (BF16 TP≥2 or W4A16 on one card) and for Nemotron 3 Embed 1B</td>
+<td><code>g6e.4xlarge</code></td>
+<td>16 vCPU, 128 GiB, <strong>1× L40S 48 GB</strong>, 20 Gbps, $3.00/hr. The NIM support matrix lists L40S for Nemotron 3.5 Lightning (W4A16 on one card, ≥32 GB) and for Nemotron 3 Embed 1B (~4 GB); both share the card</td>
 </tr>
 <tr>
 <td>Region</td>
@@ -206,7 +206,7 @@ value in §6.1 must differ per box.</p>
 <tr>
 <td>Root volume</td>
 <td><strong>300 GB gp3</strong>, <code>DeleteOnTermination=true</code></td>
-<td>NIM caches (~63 GB for Lightning BF16, less for W4A16), NIM images (~15 GB each), blueprint images, Milvus. Keep <code>LOCAL_NIM_CACHE=/opt/nim-cache</code> on EBS so a stop/start does not re-download models; the 1.9 TB NVMe instance store is ephemeral</td>
+<td>NIM caches (~63 GB for Lightning BF16, less for W4A16), NIM images (~15 GB each), blueprint images, Milvus. Keep <code>LOCAL_NIM_CACHE=/opt/nim-cache</code> on EBS so a stop/start does not re-download models; the 600 GB NVMe instance store is ephemeral</td>
 </tr>
 <tr>
 <td>Login</td>
@@ -221,9 +221,11 @@ value in §6.1 must differ per box.</p>
 </tbody>
 </table>
 <p><strong>GPU placement.</strong> The blueprint pins the Lightning NIM to GPU 0 and the Embed NIM to GPU 1 (<code>docker-compose-nim.yml</code>).
-On a 48 GB card NIM must select the W4A16 profile for Lightning; if <code>nemotron-lightning</code> fails to become ready, apply the
-commented <code>NIM_TENSOR_PARALLEL_SIZE=2</code> / <code>device_ids: ['0','1']</code> override in <code>deploy/compose/docker-compose.workshop.yml</code>
-and move <code>embedqa</code> to GPU 2. Milvus runs on the CPU.</p>
+On a one-GPU box the overlay (<code>deploy/compose/docker-compose.workshop.yml</code>) re-pins <strong>both</strong> NIMs to GPU 0 with <code>!override</code>,
+starts the embed NIM first (<code>depends_on: service_healthy</code>), and caps Lightning's KV cache with <code>NIM_KVCACHE_PERCENT</code>
+(default 0.6) so its W4A16 profile leaves room for the ~4 GB embed NIM. Validate on first boot (§8). If Lightning
+cannot fit, the fallback is the blueprint's own hybrid mode: <code>NIM_EMBED_BASE_URL=https://integrate.api.nvidia.com/v1</code>
+with a build.nvidia.com key, keeping only the LLM local. Milvus runs on the CPU.</p>
 <hr>
 <h2 id="4-network-specification">4. Network specification</h2>
 <p>Nothing is exposed on the instance's public IP. The Cloudflare tunnel dials outbound; Caddy on the host gates both hostnames.</p>
@@ -391,7 +393,7 @@ aws service-quotas get-service-quota --service-code ec2 --quota-code L-DB2E81BA 
 # 1. launch (300 GB gp3, the DL Base GPU AMI, SSH-only SG, tags Replica=N)
 AMI=$(aws ssm get-parameter --name /aws/service/deeplearning/ami/x86_64/base-oss-nvidia-driver-gpu-ubuntu-22.04/latest/ami-id \
       --query Parameter.Value --output text --profile &quot;$PROFILE&quot;)
-aws ec2 run-instances --image-id &quot;$AMI&quot; --instance-type g6e.12xlarge --key-name acp-workshop \
+aws ec2 run-instances --image-id &quot;$AMI&quot; --instance-type g6e.4xlarge --key-name acp-workshop \
   --security-group-ids &quot;$SG&quot; --block-device-mappings 'DeviceName=/dev/sda1,Ebs={VolumeSize=300,VolumeType=gp3,DeleteOnTermination=true}' \
   --tag-specifications &quot;ResourceType=instance,Tags=[{Key=Name,Value=acp-$N},{Key=acp-workshop,Value=true},{Key=Replica,Value=$N}]&quot; \
   --profile &quot;$PROFILE&quot;
@@ -411,7 +413,7 @@ ssh -i ~/.ssh/acp_workshop ubuntu@&lt;ip&gt; \
 <p><code>bootstrap.sh</code> is idempotent: rerunning it re-pulls nothing that is already present and restarts the units.</p>
 <hr>
 <h2 id="8-validation">8. Validation</h2>
-<pre><code class="language-bash">nvidia-smi                                                       # 4x L40S; NIM processes on GPU 0 and 1
+<pre><code class="language-bash">nvidia-smi                                                       # 1x L40S; both NIM processes on GPU 0
 curl -sf localhost:8010/v1/health/ready &amp;&amp; curl -sf localhost:8011/v1/health/ready
 curl -sf localhost/api/health
 git -C /opt/Retail-Agentic-Commerce status --porcelain           # must print nothing
@@ -437,10 +439,10 @@ agent stream name — the four values the setup page and the facilitator email n
 </thead>
 <tbody>
 <tr>
-<td><code>g6e.12xlarge</code> compute ($10.49/hr)</td>
-<td>~$84</td>
-<td>~$1,846</td>
-<td>~$7,650</td>
+<td><code>g6e.4xlarge</code> compute ($3.00/hr)</td>
+<td>~$24</td>
+<td>~$528</td>
+<td>~$2,190</td>
 </tr>
 <tr>
 <td>EBS 300 GB gp3 (billed even while stopped)</td>
@@ -456,7 +458,7 @@ agent stream name — the four values the setup page and the facilitator email n
 </tr>
 </tbody>
 </table>
-<p>A box left running is ~$250/day. Install the start/stop schedule the day the box is built; only <code>terminate</code> stops
+<p>A box left running is ~$72/day. Install the start/stop schedule the day the box is built; only <code>terminate</code> stops
 compute billing, and teardown is incomplete until the CNAME and <code>cloudflared tunnel delete acp-N</code> are done too.</p>
 <hr>
 <h2 id="11-lifecycle-and-teardown">11. Lifecycle and teardown</h2>
@@ -477,9 +479,9 @@ compute billing, and teardown is incomplete until the CNAME and <code>cloudflare
 </thead>
 <tbody>
 <tr>
-<td><code>nemotron-lightning</code> restarts, log says no compatible profile</td>
-<td>one L40S is not enough for the auto-selected profile</td>
-<td>apply the TP2 override in the overlay (§3)</td>
+<td><code>nemotron-lightning</code> restarts with an out-of-memory or profile error</td>
+<td>Lightning cannot fit beside the embed NIM on the 48 GB card</td>
+<td>lower <code>NIM_KVCACHE_PERCENT</code> (0.5), or switch embeddings to the hosted endpoint (§3)</td>
 </tr>
 <tr>
 <td>Storefront works but no traces in Splunk AO</td>

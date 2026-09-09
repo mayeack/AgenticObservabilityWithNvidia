@@ -50,7 +50,7 @@ a{color:#bd0d5f} hr{border:0;border-top:1px solid #e1e5ec;margin:2em 0}
 </tr>
 <tr>
 <td>Instance ID / type / AZ</td>
-<td><em>fill in</em> / <code>g6e.12xlarge</code> / <em>fill in</em></td>
+<td><em>fill in</em> / <code>g6e.4xlarge</code> (1× L40S) / <em>fill in</em></td>
 </tr>
 <tr>
 <td>AMI</td>
@@ -207,6 +207,8 @@ gateway connection. See Spec §6.</p>
 <ul>
 <li>Compose resolves the overlay's relative paths against the blueprint directory — which is why the overlay uses
   <code>${WORKSHOP_DIR}</code> everywhere. Do not "fix" the paths to be relative.</li>
+<li>The overlay's <code>devices: !override</code> needs Docker Compose ≥ 2.24 (<code>docker compose version</code>); older versions append the
+  blueprint's GPU 1 reservation and the embed NIM fails on a one-GPU box.</li>
 <li><code>env_file</code> entries must exist before <code>docker compose up</code>; an empty <code>.env.workshop</code> starts the agents without
   exporters and they log a warning per exporter rather than failing.</li>
 <li>Both <code>nvidia-nat</code> exporters are registered by <code>nvidia-nat-opentelemetry</code>; <code>nat info components -t telemetry_exporter</code>

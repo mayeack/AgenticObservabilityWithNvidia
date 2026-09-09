@@ -107,28 +107,38 @@ services:
       - acp-nim-network
     restart: unless-stopped
 
-  # ---- NIM placement on 4x L40S (48 GB) --------------------------------------
-  # The blueprint pins Nemotron 3.5 Lightning to GPU 0 and Nemotron 3 Embed to
-  # GPU 1. NIM auto-selects a profile that fits one L40S (W4A16). If it refuses
-  # to start on one card, uncomment to run BF16 with tensor parallel 2:
-  # nemotron-lightning:
-  #   environment:
-  #     - NIM_TENSOR_PARALLEL_SIZE=2
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             device_ids: ['0', '1']
-  #             capabilities: [gpu]
-  # embedqa:
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             device_ids: ['2']
-  #             capabilities: [gpu]
+  # ---- NIM placement on ONE L40S (g6e.4xlarge, 48 GB) ---------------------------
+  # The blueprint pins Lightning to GPU 0 and Embed to GPU 1. A g6e.4xlarge has a
+  # single L40S, so both NIMs share GPU 0: the embed NIM (~4 GB) becomes healthy
+  # first, then Lightning starts on its W4A16 profile with its KV cache capped
+  # (NIM_KVCACHE_PERCENT) so it leaves the embed NIM alone.
+  # Validate on first boot: `nvidia-smi` shows both processes on GPU 0 and both
+  # /v1/health/ready endpoints return 200. Lightning OOMs -> lower the percent;
+  # Lightning starved of KV cache -> raise it toward 0.8.
+  # `!override` replaces the blueprint's device list instead of appending to it
+  # (Docker Compose >= 2.24).
+  embedqa:
+    deploy:
+      resources:
+        reservations:
+          devices: !override
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+
+  nemotron-lightning:
+    environment:
+      - NIM_KVCACHE_PERCENT=${NIM_KVCACHE_PERCENT:-0.6}
+    depends_on:
+      embedqa:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices: !override
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
 
 volumes:
   acp-workshop-logs:

@@ -1,0 +1,116 @@
+diff -ru upstream/post-purchase.yml configs/post-purchase.yml
+--- upstream/post-purchase.yml	2026-09-08 19:36:49
++++ configs/post-purchase.yml	2026-09-08 19:36:49
+@@ -15,11 +15,25 @@
+       console:
+         _type: console
+         level: info
++      file:                          # workshop addition (c): agent log file -> collector -> Splunk HEC
++        _type: file
++        path: ${WORKSHOP_LOG_DIR:-/app/logs}/post-purchase-agent.log
++        level: INFO
+     tracing:
+       phoenix:
+         _type: phoenix
+         project: "post-purchase-agent"
+         endpoint: ${PHOENIX_ENDPOINT:-http://localhost:6006/v1/traces}
++      splunk_ao:                     # workshop addition (a): Splunk Agent Observability
++        _type: galileo
++        endpoint: ${SPLUNK_AO_OTEL_ENDPOINT:-https://api.multitenant.galileocloud.io/otel/traces}
++        project: ${SPLUNK_AO_PROJECT:-RetailAgenticCommerce}
++        logstream: ${SPLUNK_AO_AGENT_STREAM:-acp1}
++        api_key: ${SPLUNK_AO_API_KEY}
++      splunk_core:                   # workshop addition (c): OTLP -> local OpenTelemetry Collector -> Splunk HEC
++        _type: otelcollector
++        endpoint: ${OTEL_COLLECTOR_ENDPOINT:-http://otel-collector:4318/v1/traces}
++        project: acp-post-purchase-agent
+ 
+ # LLM configuration
+ # Model and endpoint can be configured via environment variables:
+diff -ru upstream/promotion.yml configs/promotion.yml
+--- upstream/promotion.yml	2026-09-08 19:36:49
++++ configs/promotion.yml	2026-09-08 19:36:49
+@@ -13,11 +13,25 @@
+       console:
+         _type: console
+         level: info
++      file:                          # workshop addition (c): agent log file -> collector -> Splunk HEC
++        _type: file
++        path: ${WORKSHOP_LOG_DIR:-/app/logs}/promotion-agent.log
++        level: INFO
+     tracing:
+       phoenix:
+         _type: phoenix
+         project: "promotion-agent"
+         endpoint: ${PHOENIX_ENDPOINT:-http://localhost:6006/v1/traces}
++      splunk_ao:                     # workshop addition (a): Splunk Agent Observability
++        _type: galileo
++        endpoint: ${SPLUNK_AO_OTEL_ENDPOINT:-https://api.multitenant.galileocloud.io/otel/traces}
++        project: ${SPLUNK_AO_PROJECT:-RetailAgenticCommerce}
++        logstream: ${SPLUNK_AO_AGENT_STREAM:-acp1}
++        api_key: ${SPLUNK_AO_API_KEY}
++      splunk_core:                   # workshop addition (c): OTLP -> local OpenTelemetry Collector -> Splunk HEC
++        _type: otelcollector
++        endpoint: ${OTEL_COLLECTOR_ENDPOINT:-http://otel-collector:4318/v1/traces}
++        project: acp-promotion-agent
+ 
+ # LLM configuration
+ # Model and endpoint can be configured via environment variables:
+diff -ru upstream/recommendation.yml configs/recommendation.yml
+--- upstream/recommendation.yml	2026-09-08 19:36:49
++++ configs/recommendation.yml	2026-09-08 19:36:49
+@@ -33,11 +33,25 @@
+       console:
+         _type: console
+         level: info
++      file:                          # workshop addition (c): agent log file -> collector -> Splunk HEC
++        _type: file
++        path: ${WORKSHOP_LOG_DIR:-/app/logs}/recommendation-agent.log
++        level: INFO
+     tracing:
+       phoenix:
+         _type: phoenix
+         project: "arag-recommendations"
+         endpoint: ${PHOENIX_ENDPOINT:-http://localhost:6006/v1/traces}
++      splunk_ao:                     # workshop addition (a): Splunk Agent Observability
++        _type: galileo
++        endpoint: ${SPLUNK_AO_OTEL_ENDPOINT:-https://api.multitenant.galileocloud.io/otel/traces}
++        project: ${SPLUNK_AO_PROJECT:-RetailAgenticCommerce}
++        logstream: ${SPLUNK_AO_AGENT_STREAM:-acp1}
++        api_key: ${SPLUNK_AO_API_KEY}
++      splunk_core:                   # workshop addition (c): OTLP -> local OpenTelemetry Collector -> Splunk HEC
++        _type: otelcollector
++        endpoint: ${OTEL_COLLECTOR_ENDPOINT:-http://otel-collector:4318/v1/traces}
++        project: acp-recommendation-agent
+ 
+ llms:
+   nim_llm:
+diff -ru upstream/search.yml configs/search.yml
+--- upstream/search.yml	2026-09-08 19:36:49
++++ configs/search.yml	2026-09-08 19:36:49
+@@ -13,11 +13,25 @@
+       console:
+         _type: console
+         level: info
++      file:                          # workshop addition (c): agent log file -> collector -> Splunk HEC
++        _type: file
++        path: ${WORKSHOP_LOG_DIR:-/app/logs}/search-agent.log
++        level: INFO
+     tracing:
+       phoenix:
+         _type: phoenix
+         project: "search-agent"
+         endpoint: ${PHOENIX_ENDPOINT:-http://localhost:6006/v1/traces}
++      splunk_ao:                     # workshop addition (a): Splunk Agent Observability
++        _type: galileo
++        endpoint: ${SPLUNK_AO_OTEL_ENDPOINT:-https://api.multitenant.galileocloud.io/otel/traces}
++        project: ${SPLUNK_AO_PROJECT:-RetailAgenticCommerce}
++        logstream: ${SPLUNK_AO_AGENT_STREAM:-acp1}
++        api_key: ${SPLUNK_AO_API_KEY}
++      splunk_core:                   # workshop addition (c): OTLP -> local OpenTelemetry Collector -> Splunk HEC
++        _type: otelcollector
++        endpoint: ${OTEL_COLLECTOR_ENDPOINT:-http://otel-collector:4318/v1/traces}
++        project: acp-search-agent
+ 
+ # =============================================================================
+ # EMBEDDERS - Semantic embeddings for product search

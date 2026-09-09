@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACP Workshop EC2 — Configuration Reference &amp; Rebuild Runbook</title><style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;max-width:900px;margin:2rem auto;padding:0 1.25rem;line-height:1.55;color:#0c1724;background:#fff}
+h1,h2,h3{line-height:1.25;margin-top:1.8em} h1{border-bottom:2px solid #ff007f;padding-bottom:.3em}
+code,pre{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+pre{background:#f4f6fa;border:1px solid #e1e5ec;border-radius:6px;padding:.9em 1em;overflow-x:auto}
+code{background:#f4f6fa;padding:.1em .3em;border-radius:3px} pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.95em} th,td{border:1px solid #e1e5ec;padding:.45em .6em;vertical-align:top;text-align:left} th{background:#f4f6fa}
+blockquote{border-left:4px solid #ff9000;margin:1em 0;padding:.2em 1em;color:#585b61;background:#fff8ef}
+a{color:#bd0d5f} hr{border:0;border-top:1px solid #e1e5ec;margin:2em 0}
+</style></head><body>
+<h1 id="acp-workshop-ec2-configuration-reference-rebuild-runbook">ACP Workshop EC2 — Configuration Reference &amp; Rebuild Runbook</h1>
+<p><strong>Status:</strong> template — fill in the "as built" values when the first box is provisioned.
+<strong>Companion:</strong> <code>ACP-EC2-Instance-Spec.md</code> (what a correct box is). This file records what was actually built.</p>
+<h2 id="1-scope-what-is-reproducible">1. Scope — what is reproducible</h2>
+<p>Everything on the box is rebuilt from two public repos plus the hand-over files in Spec §2.2:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Path on box</th>
+<th>Pinned to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NVIDIA-AI-Blueprints/Retail-Agentic-Commerce</code></td>
+<td><code>/opt/Retail-Agentic-Commerce</code></td>
+<td>tag <code>v1.0.0</code> (commit <code>3df75e7</code>) — <strong>never edited</strong></td>
+</tr>
+<tr>
+<td><code>mayeack/AgenticObservabilityWithNvidia</code></td>
+<td><code>/opt/AgenticObservabilityWithNvidia</code></td>
+<td><code>main</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-aws-instance-facts-as-built">2. AWS / instance facts (as built)</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account / profile</td>
+<td><em>fill in</em></td>
+</tr>
+<tr>
+<td>Instance ID / type / AZ</td>
+<td><em>fill in</em> / <code>g6e.12xlarge</code> / <em>fill in</em></td>
+</tr>
+<tr>
+<td>AMI</td>
+<td><em>fill in (SSM latest at launch time)</em></td>
+</tr>
+<tr>
+<td>Root volume</td>
+<td>300 GB gp3</td>
+</tr>
+<tr>
+<td>Security group</td>
+<td><em>fill in</em> — SSH from operator IP only</td>
+</tr>
+<tr>
+<td>Key pair</td>
+<td><code>acp-workshop</code></td>
+</tr>
+<tr>
+<td>Tags</td>
+<td><code>Name=acp-N</code>, <code>acp-workshop=true</code>, <code>Replica=N</code></td>
+</tr>
+<tr>
+<td>Tunnel</td>
+<td><code>acp-N</code> → <code>acpN.&lt;zone&gt;</code> (UUID <em>fill in</em>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ports-that-must-be-reachable">Ports that must be reachable</h3>
+<p>See Spec §4. Only 22 is inbound; everything else is via the tunnel or local.</p>
+<h2 id="3-users-access-and-ssh">3. Users, access, and SSH</h2>
+<ul>
+<li><code>ubuntu</code>, key <code>~/.ssh/acp_workshop</code>.</li>
+<li>Storefront access key: Caddy basic auth user <code>acp</code>, password = the per-box access key (in <code>/etc/caddy/Caddyfile</code>).</li>
+<li>NIM bearer token (only if <code>nimN.&lt;zone&gt;</code> is published): in <code>/etc/caddy/Caddyfile</code>, mirrored in the AI Defense gateway connection.</li>
+</ul>
+<h2 id="4-software-inventory">4. Software inventory</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version</th>
+<th>Installed by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA driver / CUDA</td>
+<td>from the AMI</td>
+<td>AMI</td>
+</tr>
+<tr>
+<td>Docker Engine + Compose v2 + NVIDIA Container Toolkit</td>
+<td>from the AMI</td>
+<td>AMI</td>
+</tr>
+<tr>
+<td><code>cloudflared</code>, <code>caddy</code></td>
+<td>apt</td>
+<td><code>bootstrap.sh</code></td>
+</tr>
+<tr>
+<td>Blueprint images</td>
+<td><code>nvcr.io/nvidia/blueprint</code> builds from the checkout (<code>docker compose build</code>)</td>
+<td><code>bootstrap.sh</code></td>
+</tr>
+<tr>
+<td>NIM images</td>
+<td><code>nemotron-3.5-lightning-30b-a3b:2.0.9-variant</code>, <code>nemotron-3-embed-1b:2.2.2</code></td>
+<td>compose pull</td>
+</tr>
+<tr>
+<td>Collector</td>
+<td><code>otel/opentelemetry-collector-contrib:0.157.0</code></td>
+<td>compose pull</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-application-configuration">5. Application configuration</h2>
+<h3 id="layout">Layout</h3>
+<pre><code>/opt/Retail-Agentic-Commerce/            # blueprint, pristine
+  .env                                   # blueprint variables (hand-over)
+/opt/AgenticObservabilityWithNvidia/     # this repo
+  deploy/.env.workshop                   # workshop variables (hand-over)
+  deploy/agents/configs/*.yml            # mounted over /app/configs in the agents
+  deploy/otel/collector.yaml
+  deploy/compose/docker-compose.workshop.yml
+/opt/nim-cache/                          # LOCAL_NIM_CACHE
+/etc/caddy/Caddyfile
+/etc/cloudflared/config.yml  ~/.cloudflared/&lt;uuid&gt;.json
+/etc/systemd/system/acp-stack.service  acp-tunnel.service
+</code></pre>
+<h3 id="envworkshop-non-secret-values-verbatim"><code>.env.workshop</code> — non-secret values (verbatim)</h3>
+<pre><code class="language-ini">WORKSHOP_ENVIRONMENT=acp1
+WORKSHOP_DIR=/opt/AgenticObservabilityWithNvidia
+WORKSHOP_LOG_DIR=/app/logs
+LOCAL_NIM_CACHE=/opt/nim-cache
+NIM_LLM_MODEL_NAME=nvidia/nemotron-3.5-lightning
+NIM_LLM_BASE_URL=https://&lt;gateway-host&gt;/&lt;tenant&gt;/&lt;connection&gt;/v1
+NIM_EMBED_BASE_URL=http://embedqa:8000/v1
+NIM_EMBED_MODEL_NAME=nvidia/nemotron-3-embed-1b
+NIM_EMBED_DIM=2048
+SPLUNK_AO_CONSOLE_URL=https://console.multitenant.galileocloud.io
+SPLUNK_AO_OTEL_ENDPOINT=https://api.multitenant.galileocloud.io/otel/traces
+SPLUNK_AO_PROJECT=RetailAgenticCommerce
+SPLUNK_AO_AGENT_STREAM=acp1
+OTEL_COLLECTOR_ENDPOINT=http://otel-collector:4318/v1/traces
+SPLUNK_HEC_URL=https://http-inputs-&lt;stack&gt;.splunkcloud.com:443/services/collector/event
+SPLUNK_HEC_INDEX=acp
+CISCO_AI_DEFENSE_API_BASE=https://us.api.inspect.aidefense.security.cisco.com
+</code></pre>
+<p>Secrets (values withheld): <code>NGC_API_KEY</code>, <code>NVIDIA_API_KEY</code> (= the AI Defense gateway key), <code>SPLUNK_AO_API_KEY</code>,
+<code>SPLUNK_HEC_TOKEN</code>, <code>CISCO_AI_DEFENSE_API_KEY</code>, <code>LITELLM_MASTER_KEY</code>.</p>
+<h3 id="the-one-value-you-must-change-per-replica">The one value you must change per replica</h3>
+<p><code>WORKSHOP_ENVIRONMENT</code> and <code>SPLUNK_AO_AGENT_STREAM</code> (identical strings), plus the tunnel/hostname and the AI Defense
+gateway connection. See Spec §6.</p>
+<h3 id="otel-collector-pipelines">OTel collector pipelines</h3>
+<p><code>traces: otlp → memory_limiter, resource/workshop, batch → splunk_hec/traces (otel:traces)</code>
+<code>logs: filelog/agents → memory_limiter, resource/workshop, batch → splunk_hec/logs (acp:&lt;agent&gt;)</code></p>
+<h3 id="systemd-units">systemd units</h3>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>acp-stack.service</code></td>
+<td><code>docker compose -f … -f … -f … -f docker-compose.workshop.yml up -d</code> from the blueprint dir; <code>down</code> on stop</td>
+</tr>
+<tr>
+<td><code>acp-tunnel.service</code></td>
+<td><code>cloudflared tunnel --config /etc/cloudflared/config.yml run</code></td>
+</tr>
+<tr>
+<td><code>caddy.service</code></td>
+<td>apt-installed Caddy with <code>/etc/caddy/Caddyfile</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-rebuild-procedure-raw-ec2-working-replica">6. Rebuild procedure — raw EC2 → working replica</h2>
+<ol>
+<li>Launch per Spec §7 step 1; create the tunnel and DNS per step 2.</li>
+<li><code>scp</code> the three hand-over files to <code>/tmp</code> on the box.</li>
+<li>Run <code>bootstrap.sh</code> with <code>REPLICA</code>, <code>ZONE</code>, <code>TUNNEL_UUID</code>, <code>ACCESS_KEY</code> (and <code>NIM_BEARER</code> if <code>nimN.&lt;zone&gt;</code> is published).</li>
+<li>Wait for <code>nemotron-lightning</code> and <code>embedqa</code> to report ready (first start downloads ~70 GB: 10–20 minutes).</li>
+<li>The seeder (<code>milvus-seeder</code>) runs once from the blueprint's compose; confirm a search returns products.</li>
+<li>Validate per Spec §8; capture the Lab 1 screenshots (<code>docker compose ps</code>, <code>nvidia-smi</code>, Phoenix).</li>
+</ol>
+<h2 id="7-verification">7. Verification</h2>
+<p>Spec §1 table, criteria 1–9. Record the date and the person who verified in this section.</p>
+<h2 id="8-known-issues-and-gotchas">8. Known issues and gotchas</h2>
+<ul>
+<li>Compose resolves the overlay's relative paths against the blueprint directory — which is why the overlay uses
+  <code>${WORKSHOP_DIR}</code> everywhere. Do not "fix" the paths to be relative.</li>
+<li><code>env_file</code> entries must exist before <code>docker compose up</code>; an empty <code>.env.workshop</code> starts the agents without
+  exporters and they log a warning per exporter rather than failing.</li>
+<li>Both <code>nvidia-nat</code> exporters are registered by <code>nvidia-nat-opentelemetry</code>; <code>nat info components -t telemetry_exporter</code>
+  inside an agent container lists <code>galileo</code> and <code>otelcollector</code> if the image is intact.</li>
+<li>The AI Defense gateway must be able to reach the NIM. With the hosted gateway that means publishing <code>nimN.&lt;zone&gt;</code>
+  behind the Caddy bearer check; with the local gateway profile nothing is published.</li>
+</ul>
+<h2 id="9-backup-set-what-is-not-in-git">9. Backup set — what is not in git</h2>
+<p><code>/opt/Retail-Agentic-Commerce/.env</code>, <code>/opt/AgenticObservabilityWithNvidia/deploy/.env.workshop</code>, <code>~/.cloudflared/&lt;uuid&gt;.json</code>,
+<code>/etc/caddy/Caddyfile</code> (holds the access key and NIM bearer), <code>~/.ssh/acp_workshop</code> on the operator machine.</p>
+</body></html>

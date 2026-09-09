@@ -1,0 +1,101 @@
+# Agentic Observability with NVIDIA — Hugo site config.
+# Theme: splunk/hugo-theme-splunk-workshop (git submodule under themes/).
+# Local preview:  hugo server        (needs Hugo 0.161+ extended)
+# Production build happens in .github/workflows/pages.yml.
+
+baseURL = "https://mayeack.github.io/AgenticObservabilityWithNvidia/"
+locale  = "en-us"
+title   = "Agentic Observability with NVIDIA"
+defaultContentLanguage = "en"
+enableEmoji     = true
+enableRobotsTXT = true
+theme = "hugo-theme-splunk-workshop"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  [markup.goldmark.parser.attribute]
+    block = true
+    title = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel   = 4
+    ordered    = false
+  [markup.highlight]
+    noClasses    = false
+    lineNos      = false
+    codeFences   = true
+    guessSyntax  = true
+    tabWidth     = 2
+
+[outputs]
+  home    = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  page    = ["HTML"]
+
+[params]
+  # ---- Identity ----
+  brandName       = "splunk>"
+  brandTagline    = ""
+  description     = "An NVIDIA AI Blueprint, as shipped, on AWS — observed by Splunk Agent Observability, secured by Cisco AI Defense, governed in Splunk Core."
+  copyright       = "&copy; {year} Cisco Systems, Inc."
+  logoLight       = "images/splunk-logo-black.png"
+  logoDark        = "images/splunk-logo-white.png"
+  logoHeight      = "40"
+  favicon         = "favicon.svg"
+
+  # ---- Hero background (shipped with the theme) ----
+  heroBackgroundLight = "images/background_Splunk-light-mode2_16x9.webp"
+  heroBackgroundDark  = "images/background_Splunk-dark-mode2_16x9.webp"
+
+  # ---- Mode ----
+  defaultMode     = "auto"
+  showThemeToggle = true
+
+  # ---- Splunk brand colors (theme defaults) ----
+  colorAccent      = "#FF007F"
+  colorAccent2     = "#FF9000"
+  colorAccent3     = "#FFAB0F"
+  colorAccentDark  = "#D4006B"
+  colorAccentText     = "#BD0D5F"
+  colorAccentTextDark = "#FF7DBA"
+
+  colorInk          = "#0C1724"
+  colorInkMuted     = "#585B61"
+  colorPaper        = "#FFFFFF"
+  colorSurface      = "#F4F6FA"
+  colorSurfaceAlt   = "#E9EDF2"
+  colorBorder       = "#E1E5EC"
+  colorBorderStrong = "#C7CDD8"
+
+  colorInkDark          = "#F4F1EA"
+  colorInkMutedDark     = "#9CA3AF"
+  colorPaperDark        = "#0C1724"
+  colorSurfaceDark      = "#141E2F"
+  colorSurfaceAltDark   = "#1B2740"
+  colorBorderDark       = "#1F2C44"
+  colorBorderStrongDark = "#2A3A56"
+
+  # ---- Typography ----
+  splunkDataSansPro = true
+  fontUrl     = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+  fontDisplay = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
+  fontBody    = "'Splunk Data Sans Pro', ui-sans-serif, system-ui, sans-serif"
+  fontMono    = "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace"
+
+  # ---- Layout toggles ----
+  showSidebar     = true
+  showToc         = true
+  showProgress    = true
+  showLightTrails = true
+  contentMaxWidth = "720px"
+
+  # ---- Repo ----
+  editURL = ""
+  repoURL = "https://github.com/mayeack/AgenticObservabilityWithNvidia"
+
+  # ---- Footer version badge: off ----
+  versionBadgeRepo = ""
+
+  [params.social]
+    github = "https://github.com/mayeack/AgenticObservabilityWithNvidia"

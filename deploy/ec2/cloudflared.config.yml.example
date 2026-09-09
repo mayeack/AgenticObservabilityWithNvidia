@@ -1,0 +1,9 @@
+# /etc/cloudflared/config.yml — one named tunnel per box; DNS routed by UUID.
+tunnel: __TUNNEL_UUID__
+credentials-file: /root/.cloudflared/__TUNNEL_UUID__.json
+ingress:
+  - hostname: __HOST__
+    service: http://localhost:8080
+  - hostname: __NIM_HOST__
+    service: http://localhost:8090
+  - service: http_status:404

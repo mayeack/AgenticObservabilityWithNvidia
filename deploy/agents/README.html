@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent configs — the only YAML the workshop changes</title><style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;max-width:900px;margin:2rem auto;padding:0 1.25rem;line-height:1.55;color:#0c1724;background:#fff}
+h1,h2,h3{line-height:1.25;margin-top:1.8em} h1{border-bottom:2px solid #ff007f;padding-bottom:.3em}
+code,pre{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+pre{background:#f4f6fa;border:1px solid #e1e5ec;border-radius:6px;padding:.9em 1em;overflow-x:auto}
+code{background:#f4f6fa;padding:.1em .3em;border-radius:3px} pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.95em} th,td{border:1px solid #e1e5ec;padding:.45em .6em;vertical-align:top;text-align:left} th{background:#f4f6fa}
+blockquote{border-left:4px solid #ff9000;margin:1em 0;padding:.2em 1em;color:#585b61;background:#fff8ef}
+a{color:#bd0d5f} hr{border:0;border-top:1px solid #e1e5ec;margin:2em 0}
+</style></head><body>
+<h1 id="agent-configs-the-only-yaml-the-workshop-changes">Agent configs — the only YAML the workshop changes</h1>
+<ul>
+<li><code>upstream/</code> — byte-for-byte copies of <code>src/agents/configs/*.yml</code> from
+  <a href="https://github.com/NVIDIA-AI-Blueprints/Retail-Agentic-Commerce/tree/v1.0.0/src/agents/configs">NVIDIA-AI-Blueprints/Retail-Agentic-Commerce @ v1.0.0</a>
+  (commit <code>3df75e7</code>). Never edit.</li>
+<li><code>configs/</code> — the same four files plus the workshop additions under <code>general.telemetry</code>:
+  a <code>file</code> logger (addition c), a <code>galileo</code>-type exporter (addition a, Splunk Agent Observability) and an
+  <code>otelcollector</code>-type exporter (addition c, local collector → Splunk HEC).</li>
+<li><code>workshop.diff</code> — <code>diff -ru upstream configs</code>; regenerate after any change and show it on the lab pages.</li>
+</ul>
+<p>The Compose overlay bind-mounts <code>configs/</code> over <code>/app/configs</code> in the four <code>nat-agents</code> containers, so the
+blueprint's image and checkout stay untouched. Exporter types <code>galileo</code> and <code>otelcollector</code> are registered by
+<code>nvidia-nat-opentelemetry</code>, which the image already has through the <code>nvidia-nat[phoenix]</code> extra (NAT 1.7.0).</p>
+</body></html>

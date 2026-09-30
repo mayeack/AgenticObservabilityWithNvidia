@@ -1,7 +1,7 @@
 +++
 title       = "Setup & Prerequisites"
 description = "Access PseudoCo Assistant, Splunk Agent Observability, and Cisco AI Defense."
-duration    = "10 min"
+duration    = "5 min"
 weight      = 10
 +++
 

@@ -1,7 +1,7 @@
 +++
 title       = "Introduction"
 description = "Open weights give you control. Continuous evaluation and runtime enforcement turn it into trust."
-duration    = "15 min"
+duration    = "10 min"
 weight      = 5
 +++
 

@@ -3,5 +3,8 @@ resources/
 .hugo_build.lock
 .DS_Store
 
-deploy/.env.workshop
-deploy/.env
+# Key material and local key overrides - never commit (this repo is public).
+.nvidia-workshop.env
+*.nvidia-workshop.env
+.keys.local
+*.keys.local

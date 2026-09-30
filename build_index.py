@@ -18,7 +18,7 @@ and everything else is generated from it:
                                          the Executive-outcome notice callouts are unwrapped back
                                          to bare paragraphs and `/images/image-NN.png` paths go
                                          back to relative.
-  3. the five lab/overview pages       — each page's full Executive outcome is written between
+  3. the two lab pages                 — each page's full Executive outcome is written between
                                          `<!-- exec-outcome:start -->` / `<!-- exec-outcome:end -->`
                                          markers, so it never drifts from the Introduction.
 
@@ -33,7 +33,7 @@ IS hand-maintained (it is the only place the hero title, eyebrow, pillars line, 
 Override the narrative output path with an argument or NARRATIVE_MD; select the vertical with
 WORKSHOP_SLUG (each verticalized workshop is its own section under content/workshops/):
 
-    WORKSHOP_SLUG=agentic-observability-<variant> python3 build_index.py "/path/to/1 - narrative.md"
+    WORKSHOP_SLUG=ai-trust-open-weights python3 build_index.py "/path/to/1 - narrative.md"
 """
 import os
 import re
@@ -49,7 +49,7 @@ narrative_path = Path(
 # Slug of the vertical being built. Each verticalized workshop is its own section under
 # content/workshops/ (ai-trust-healthcare, ai-trust-finserv, …) so the URLs stay
 # distinct; override with WORKSHOP_SLUG when generating a different vertical.
-WORKSHOP_SLUG = os.environ.get("WORKSHOP_SLUG", "agentic-observability-nvidia")
+WORKSHOP_SLUG = os.environ.get("WORKSHOP_SLUG", "ai-trust-open-weights")
 WORKSHOP_DIR = HERE / "content" / "workshops" / WORKSHOP_SLUG
 INTRO = WORKSHOP_DIR / "00-introduction.md"
 HOME = HERE / "content" / "_index.md"
@@ -165,17 +165,14 @@ else:
     narrative_path.write_text(narrative, encoding="utf-8")
     print(f"wrote {narrative_path}")
 
-# --- 3. Sync each lab/overview page's full Executive outcome from the Introduction ----------
-# The Introduction has exactly five "**Executive outcome …**" paragraphs, in this order:
-# Overview, Part 1, Part 2, Part 3, Part 4 — mapped positionally to the pages below. Each page
-# carries its outcome as a notice callout between sentinel markers, so the text stays
-# verbatim-identical to the Introduction and Home.
+# --- 3. Sync each lab page's full Executive outcome from the Introduction -------------------
+# The Introduction has exactly two "**Executive outcome …**" paragraphs, in this order:
+# Lab 1, Lab 2 — mapped positionally to the pages below. Each page carries its outcome as a
+# notice callout between sentinel markers, so the text stays verbatim-identical to the
+# Introduction.
 OUTCOME_PAGES = [
-    "02-overview.md",        # Overview / one architecture, one trace
-    "03-lab-1-deploy.md",    # Lab 1 — Run the blueprint as shipped
-    "04-lab-2-observe.md",   # Lab 2 — Observe (Splunk Agent Observability)
-    "05-lab-3-secure.md",    # Lab 3 — Secure (Cisco AI Defense)
-    "06-lab-4-govern.md",    # Lab 4 — Govern (Splunk Core)
+    "03-lab-1-measure.md",   # Lab 1 — Measure (Splunk Agent Observability)
+    "04-lab-2-secure.md",    # Lab 2 — Secure (Cisco AI Defense)
 ]
 
 outcomes = [ln for ln in body_lines if ln.startswith("**Executive outcome")]
@@ -205,4 +202,4 @@ for page_name, outcome in zip(OUTCOME_PAGES, outcomes):
     page.write_text("\n".join(page_lines), encoding="utf-8")
     synced += 1
 
-print(f"synced {synced}/{len(OUTCOME_PAGES)} lab/overview executive outcomes from {INTRO.name}")
+print(f"synced {synced}/{len(OUTCOME_PAGES)} lab executive outcomes from {INTRO.name}")

@@ -1,11 +1,11 @@
-# Agentic Observability with NVIDIA — Hugo site config.
+# From Open Weights to Trusted Outcomes — Hugo site config.
 # Theme: splunk/hugo-theme-splunk-workshop (git submodule under themes/).
 # Local preview:  hugo server        (needs Hugo 0.161+ extended)
 # Production build happens in .github/workflows/pages.yml.
 
 baseURL = "https://mayeack.github.io/AgenticObservabilityWithNvidia/"
 locale  = "en-us"
-title   = "Agentic Observability with NVIDIA"
+title   = "From Open Weights to Trusted Outcomes"
 defaultContentLanguage = "en"
 enableEmoji     = true
 enableRobotsTXT = true
@@ -37,7 +37,7 @@ theme = "hugo-theme-splunk-workshop"
   # ---- Identity ----
   brandName       = "splunk>"
   brandTagline    = ""
-  description     = "An NVIDIA AI Blueprint, as shipped, on AWS — observed by Splunk Agent Observability, secured by Cisco AI Defense, governed in Splunk Core."
+  description     = "Building enterprise AI you can control with Cisco and NVIDIA — open models for intelligence, continuous evaluation for evidence, runtime enforcement for trust."
   copyright       = "&copy; {year} Cisco Systems, Inc."
   logoLight       = "images/splunk-logo-black.png"
   logoDark        = "images/splunk-logo-white.png"

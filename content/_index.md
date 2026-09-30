@@ -1,29 +1,31 @@
 +++
-title         = "Agentic Observability with NVIDIA"
-hero_title    = "Agentic Observability *with NVIDIA*"
-eyebrow       = "Agentic Observability with NVIDIA — FY'27"
-description   = "An NVIDIA AI Blueprint, as shipped, on AWS. Observed by Splunk. Secured by Cisco. Governed in Splunk Core."
+title         = "From Open Weights to Trusted Outcomes"
+hero_title    = "From Open Weights to *Trusted Outcomes*"
+eyebrow       = "Building Enterprise AI You Can Control with Cisco and NVIDIA — FY'27"
+description   = "Intelligence from open models. Evidence from continuous evaluation. Enforcement at runtime. Trusted outcomes with Cisco and NVIDIA."
 home_sections = ["workshops"]
 
 [[cta]]
 label = "Start: Setup & Prerequisites"
-href  = "/workshops/agentic-observability-nvidia/01-setup/"
+href  = "/workshops/ai-trust-open-weights/01-setup/"
 style = "primary"
 
 [[cta]]
 label = "Jump to the labs"
-href  = "/workshops/agentic-observability-nvidia/02-overview/"
+href  = "/workshops/ai-trust-open-weights/03-lab-1-measure/"
 style = "ghost"
 +++
 
-*A field workshop for the platform, security, and observability teams who are putting NVIDIA-built agents into production — and the executives accountable for them.*
+*A hands-on workshop for the leaders accountable for enterprise AI — and the teams who build and run it.*
 
-## The Problem: The Agents Arrived Before the Instruments Did
+## The Problem: Control Is Not Trust
 
-Enterprises are standing up agentic AI on NVIDIA AI Blueprints in weeks. A reference storefront, a research assistant, or a customer-service agent comes with its models, its retrievers, and its orchestration already wired — and it runs on the GPUs you already bought. The build problem is solved.
+Open-weight models give enterprises greater control over how agentic systems are designed, evaluated, and governed against business-specific outcomes. You decide which weights run and where they run, and when models are served as NVIDIA NIM microservices on infrastructure you choose, prompts and data can stay inside your own environment. For agents that make decisions, call tools, and generate language that reaches customers and patients, that control is the right place to start.
 
-The trust problem is not. The moment that blueprint takes real traffic, four teams ask four questions at once. Operations asks whether the agents are fast, healthy, and affordable. Security asks whether a prompt injection can talk the promotion agent into a discount it should never give. Quality asks whether the search agent is picking the right tool and the right products. Compliance asks for the record of a single checkout, end to end, on demand.
+But control alone does not create trust. Owning the weights tells you *what* is running. It does not tell you *how it is behaving*. A model you selected and host yourself can still fabricate a treatment that never existed, leak PII or PHI, absorb a prompt injection that overrides its instructions, or step beyond its mandate and start acting like a prescriber. When you choose the model, the accountability for what it says is yours as well.
 
-Most teams answer those questions by changing the application: a tracing library here, a guardrail wrapper there, a log shipper bolted on the side. Every change forks the blueprint away from the one NVIDIA maintains, and every fork has to be re-applied on the next release. **The instrumentation becomes the technical debt.**
+Most organizations still treat trust as a gate: evaluate before launch, sign off, and hope the behavior holds. Agentic AI does not stand still long enough for that to work. It runs at machine speed, around the clock, at a volume no human review queue can keep pace with — while models, prompts, tools, and real-world traffic keep changing underneath it. A benchmark passed at launch is not proof of how the agent behaves today.
 
-This workshop closes that gap the other way around. The blueprint stays exactly as shipped. Three additions — Splunk Agent Observability, Cisco AI Defense, and HTTP Event Collector forwarding to Splunk Core — are applied as configuration and keys, never as code. One trace, captured once, answers all four questions.
+**Trust has to be proven continuously, on every interaction — otherwise it is only assumed.**
+
+That gap — between the control open weights give you and the continuous proof that trust requires — is the problem this workshop closes.

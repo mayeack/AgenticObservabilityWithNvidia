@@ -1,17 +1,20 @@
-# Agentic Observability with NVIDIA
+# From Open Weights to Trusted Outcomes
 
-Customer-facing site for the **Agentic Observability with NVIDIA** workshop, published with GitHub Pages at:
+Customer-facing site for the **From Open Weights to Trusted Outcomes: Building Enterprise AI You Can Control with
+Cisco and NVIDIA** workshop, published with GitHub Pages at:
 
 **https://mayeack.github.io/AgenticObservabilityWithNvidia/**
 
-A hands-on workshop that runs the [NVIDIA Retail Agentic Commerce](https://github.com/NVIDIA-AI-Blueprints/Retail-Agentic-Commerce)
-blueprint **exactly as shipped** on a GPU instance in AWS and adds three things as configuration — never as code:
+A hands-on workshop on a multi-agent healthcare assistant running on Cisco Secure AI Factory with NVIDIA, using
+NVIDIA NIM microservices and Nemotron open models. Two labs turn open-weight control into proven trust:
 
-1. **Splunk Agent Observability** — a `galileo`-type OpenTelemetry exporter in each NeMo Agent Toolkit agent's YAML.
-2. **Cisco AI Defense** — an AI Defense Gateway connection in front of the self-hosted Nemotron NIM (two env vars).
-3. **HEC forwarding to Splunk Core** — an OpenTelemetry Collector that ships the same spans and the agent logs to Splunk.
+1. **Lab 1 — Measure (Splunk Agent Observability)** — measure every agent interaction against trust criteria and
+   surface hallucination, PII/PHI leakage, prompt injection, and prescriptive overreach.
+2. **Lab 2 — Secure (Cisco AI Defense)** — turn the Lab 1 finding into a runtime guardrail and prove it against the
+   live application.
 
-Four labs — Run, Observe, Secure, Govern — on one storefront and one trace.
+Open models provide the intelligence, continuous evaluation provides the evidence, and runtime enforcement keeps AI
+aligned with intended business outcomes.
 
 ## Stack
 
@@ -22,13 +25,11 @@ Actions (`.github/workflows/pages.yml`) on every push to `main` (repo Settings �
 ## Layout
 
 - `content/_index.md` — Home (hero + the opening narrative section). **Generated** by `build_index.py`; do not hand-edit the body.
-- `content/workshops/agentic-observability-nvidia/` — the workshop pages: `00-introduction.md` (the narrative source of truth),
-  `01-setup.md`, `02-overview.md`, `03-lab-1-deploy.md` … `06-lab-4-govern.md`, `07-wrap-up.md`, `08-reference.md`.
+- `content/workshops/ai-trust-open-weights/` — the workshop pages: `00-introduction.md` (the narrative source of truth),
+  `01-setup.md`, `03-lab-1-measure.md`, `04-lab-2-secure.md`, `07-wrap-up.md`, `08-reference.md`.
   Sidebar order comes from `weight` in each page's front matter.
-- `static/images/` — screenshots, referenced as `/images/image-NN.png`. Placeholders ship until the rig is captured.
+- `static/images/` — screenshots, referenced as `/images/image-NN.png`.
 - `hugo.toml` — site config and theme params (branding, colors, layout toggles).
-- `deploy/` — the workshop overlay for the AWS rig: agent configs, Compose overlay, collector, gateway fallback, EC2
-  spec/runbook/bootstrap, Splunk searches and dashboard. See [deploy/README.md](deploy/README.md).
 
 ## Editing
 
@@ -41,15 +42,12 @@ Commit to `main` and push — the Pages workflow rebuilds the site (~1–2 min).
 
 ## Conventions
 
-- **Customer-facing.** No internal sales positioning or facilitator-only delivery notes on the site. Facilitator
-  material (rig build, keys, cost) lives under `deploy/ec2/`.
+- **Customer-facing.** No internal sales positioning or facilitator-only delivery notes on the site.
 - **The Introduction page is the narrative source of truth.** Edit `00-introduction.md`, then run
-  `python3 build_index.py`; it regenerates Home's body, exports `../collateral/1 - narrative.md`, and re-syncs the five
-  Executive-outcome callouts onto the overview/lab pages (between the `<!-- exec-outcome:start/end -->` markers).
+  `python3 build_index.py`; it regenerates Home's body, exports `../collateral/1 - narrative.md`, and re-syncs the two
+  Executive-outcome callouts onto the lab pages (between the `<!-- exec-outcome:start/end -->` markers).
 - **Callout standards** (theme `notice` shortcode): Executive outcomes `{{% notice style="info" title="Executive outcome" icon="star" %}}`
   (generated — never hand-edit between the markers); lab objectives `title="Objective" icon="target"`; personas
   `title="Who this is for" icon="users"` between the `<!-- persona:start/end -->` markers; operational asides
   `{{% notice note %}}`; cautions `{{% notice warning %}}`.
-- **The blueprint is never edited.** Anything the rig needs goes in `deploy/` and is shown on the lab pages as a diff
-  against the upstream file, so the "as shipped" claim stays auditable.
 - "Lorem ipsum" marks a section that is intentionally not written yet.

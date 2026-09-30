@@ -22,7 +22,7 @@ All lab work happens in your web browser; there is nothing to install. Before yo
 
 ## Access
 
-![alt text](image-1.png)
+![alt text](/images/image-210.png)
 
 Go to https://dcloud2-sjc.cisco.com/content/instantdemo/cisco-secure-ai-factory-with-nvidia-hidden and click ***View*** to access all of the tiles you will need for these labs. There will be more tiles than you will use.
 

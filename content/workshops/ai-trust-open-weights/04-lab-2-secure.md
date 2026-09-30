@@ -33,7 +33,7 @@ Cisco AI Defense is a live integration: it inspects the prompt (pre-LLM) and the
 
 #### 2.1.1 Access PseudoCo Assistant
 
-[How to Access PseudoCo Assistant](/workshops/ai-trust-open-weights/01-setup/#1-how-to-access-pseudoco-assistant)
+[How to Access PseudoCo Assistant](/workshops/ai-trust-open-weights/01-setup/#access)
 
 #### 2.1.2 Prompt Prescriptive Overreach
 
@@ -53,7 +53,7 @@ We will next configure a policy in Cisco AI Defense to block the non-compliant r
 
 #### 2.2.1 Access Cisco AI Defense
 
-[Access Cisco AI Defense](/workshops/ai-trust-open-weights/01-setup/#3-how-to-access-cisco-ai-defense)
+[Access Cisco AI Defense](/workshops/ai-trust-open-weights/01-setup/#access)
 
 #### 2.2.2 Review Dashboard
 

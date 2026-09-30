@@ -1,6 +1,6 @@
 +++
 title       = "Lab 1 — Measure"
-description = "Splunk Agent Observability: evaluate different models, score them with Luna, and surface the unknown unknowns."
+description = "Splunk Agent Observability: evaluate different models, score them with evaluators, and surface the unknown unknowns."
 duration    = "40 min"
 weight      = 30
 +++
@@ -37,7 +37,7 @@ Model evaluation, metric construction, and signal understanding is critical both
 
 ![alt text](/images/image-186.png)
 
-[How to Access PseudoCo Assistant](/workshops/ai-trust-open-weights/01-setup/#1-how-to-access-pseudoco-assistant)
+[How to Access PseudoCo Assistant](/workshops/ai-trust-open-weights/01-setup/#access)
 
 {{% notice warning "Important" %}}
 Because we are using an open weight model, ensure that you select **gpt-4o-mini** from the **Static Emission** dropdown so that tokenomics calculates correctly!
@@ -71,7 +71,7 @@ We will explore how this non-compliant behavior is monitored in subsequent secti
 
 #### 1.2.1 Access Splunk Agent Observability
 
-[How to Access Splunk Agent Observability & Splunk Observability Cloud](/workshops/ai-trust-open-weights/01-setup/#2-how-to-access-splunk-agent-observability--splunk-observability-cloud)
+[How to Access Splunk Agent Observability & Splunk Observability Cloud](/workshops/ai-trust-open-weights/01-setup/#access)
 
 #### 1.2.2 Review Overview
 

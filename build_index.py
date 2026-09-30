@@ -172,7 +172,7 @@ else:
 # Introduction.
 OUTCOME_PAGES = [
     "03-lab-1-measure.md",   # Lab 1 — Measure (Splunk Agent Observability)
-    "04-lab-2-secure.md",    # Lab 2 — Secure (Cisco AI Defense)
+    "04-lab-2-secure.md",    # Lab 2 — Secure (Agent Security)
 ]
 
 outcomes = [ln for ln in body_lines if ln.startswith("**Executive outcome")]

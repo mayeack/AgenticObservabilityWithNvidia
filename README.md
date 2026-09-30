@@ -10,7 +10,7 @@ NVIDIA NIM microservices and Nemotron open models. Two labs turn open-weight con
 
 1. **Lab 1 — Measure (Splunk Agent Observability)** — measure every agent interaction against trust criteria and
    surface hallucination, PII/PHI leakage, prompt injection, and prescriptive overreach.
-2. **Lab 2 — Secure (Cisco AI Defense)** — turn the Lab 1 finding into a runtime guardrail and prove it against the
+2. **Lab 2 — Secure (Agent Security)** — turn the Lab 1 finding into a runtime guardrail and prove it against the
    live application.
 
 Open models provide the intelligence, continuous evaluation provides the evidence, and runtime enforcement keeps AI

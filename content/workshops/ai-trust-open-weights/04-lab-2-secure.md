@@ -20,12 +20,12 @@ The **CISO** and **AI Security / AppSec** teams. Primary question: _Is our AI sa
 <!-- persona:end -->
 
 {{% notice style="info" title="Objective" icon="target" %}}
-Turn the Lab 1 finding into enforcement: a medical-advice response is **non-compliant**; you update the runtime policy and re-run to ensure a **trusted** response.
+Turn the Lab 1 evaluator into a guardrail: a medical-advice response is **non-compliant**; you update the runtime policy and re-run to ensure a **trusted** response.
 {{% /notice %}}
 
 ## Background
 
-Cisco AI Defense is a live integration: it inspects the prompt (pre-LLM) and the response (post-LLM) against **multiple guardrails** and blocks non-compliant content. The **Prescriptive Overreach** finding measured in [Lab 1](/workshops/ai-trust-open-weights/03-lab-1-measure/) is authored here as a **custom response-direction guardrail**.
+Cisco AI Defense is a live integration: it inspects the prompt (pre-LLM) and the response (post-LLM) against **multiple guardrails** and blocks non-compliant content. The **Prescriptive Overreach** evaluator measured in [Lab 1](/workshops/ai-trust-open-weights/03-lab-1-measure/) is authored here as a **custom response-direction guardrail**.
 
 ## Labs
 
@@ -33,7 +33,12 @@ Cisco AI Defense is a live integration: it inspects the prompt (pre-LLM) and the
 
 #### 2.1.1 Access PseudoCo Assistant
 
-[How to Access PseudoCo Assistant](/workshops/ai-trust-open-weights/01-setup/#access)
+Return to your tab with PseudoCo Assistant. If you closed it, access it from the splash page.
+
+![alt text](/workshops/ai-trust-open-weights/image.png)
+
+Click **Open PseudoCo Assistant**.
+
 
 #### 2.1.2 Prompt Prescriptive Overreach
 

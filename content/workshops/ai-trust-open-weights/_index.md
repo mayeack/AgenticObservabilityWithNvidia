@@ -2,7 +2,7 @@
 title       = "From Open Weights to Trusted Outcomes"
 linkTitle   = "From Open Weights to Trusted Outcomes"
 description = "Turning open-weight control into proven trust — measure every agent interaction, then enforce trusted behavior at runtime."
-duration    = "1 hour 30 min"
+duration    = "1 hour 20 min"
 difficulty  = "intermediate"
 product     = "Cisco + NVIDIA"
 weight      = 2

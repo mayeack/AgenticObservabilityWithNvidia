@@ -11,4 +11,4 @@ subtitle    = "Building Enterprise AI You Can Control with Cisco and NVIDIA"
 tagline     = "FY'27 · Hands-on"
 +++
 
-Two labs, one live multi-agent healthcare assistant running on Cisco Secure AI Factory with NVIDIA. You will measure every agent interaction against trust criteria, turn a critical finding into a runtime guardrail, and prove the fix against the live application.
+One live multi-agent healthcare assistant running on Cisco Secure AI Factory powered by NVIDIA intelligence. You will measure every agent interaction against trust criteria, turn a critical finding into a runtime guardrail, and prove the fix against the live application.

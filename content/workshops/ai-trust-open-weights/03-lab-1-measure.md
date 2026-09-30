@@ -48,11 +48,11 @@ Ensure that the following fields are set:
 - Model: nvidia/nemotron-3-super
 - Static Emission: gpt-4o
 
-#### 1.1.2 Explore PsuedoCo Assistant's Behavior
+#### 1.1.2 Explore PseudoCo Assistant's Behavior
 
 ![alt text](/workshops/ai-trust-open-weights/image-12.png)
 
-The left side-panel manipulates the PseudoCo Assistant to produce aberrant behavior, such as toxic responses, synethetic PII, or prescriptive overreach.
+The left side-panel manipulates the PseudoCo Assistant to produce aberrant behavior, such as toxic responses, synthetic PII, or prescriptive overreach.
 
 ![alt text](/workshops/ai-trust-open-weights/image-13.png)
 
@@ -96,7 +96,7 @@ Click **Agent Observability** under **Apps**.
 
 Ensure that the following filters are set:
 
-- Project: PsuedoCo Assistant
+- Project: PseudoCo Assistant
 - Agent stream: MedAdvice
 
 **Overview**: Displays the selected AI project and agent stream, with filters for time range.

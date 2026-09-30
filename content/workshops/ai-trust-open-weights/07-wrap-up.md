@@ -7,14 +7,14 @@ weight      = 70
 
 ## What You Did
 
-- **Lab 1 — Measure.** In PseudoCo Assistant you compared a baseline and an intentionally poisoned model. In Splunk Agent Observability you saw every interaction scored automatically, surfaced unanticipated risks with Signals, tracked token usage and cost, and saw how Prescriptive Overreach is authored as a repeatable rubric.
+- **Lab 1 — Measure.** In PseudoCo Assistant you saw how aberrant behavior is identified, observed, and evaluated. In Splunk Agent Observability you saw every interaction scored automatically, surfaced unanticipated risks with Signals, tracked token usage and cost, and saw how a custom Prescriptive Overreach evaluator is authored.
 - **Lab 2 — Secure.** In Cisco AI Defense you authored a prescriptive-overreach guardrail in Policy Studio, evaluated it against synthetic samples, and applied it to the runtime policy. You then proved against the live application that non-compliant responses are blocked while compliant ones get through.
 
 ## Outcome
 
 **The gap.** Open-weight models give you control over which model runs, where it runs, and how it is governed — but control is not trust. A model you chose and host can still hallucinate, leak PII/PHI, absorb a prompt injection, or overstep its mandate, on any interaction, at machine speed.
 
-**The value.** Trust becomes a loop you can run and prove. NVIDIA Nemotron open models, served as NVIDIA NIM microservices on Cisco Secure AI Factory with NVIDIA, provide the **intelligence**. Splunk Agent Observability provides the **evidence**. Cisco AI Defense provides the **enforcement**. In this workshop, the prescriptive-overreach risk you measured in Lab 1 became the guardrail you enforced in Lab 2 — **one loop, from finding to control.**
+**The value.** Trust becomes a loop you can run and prove. NVIDIA Nemotron open models, served as NVIDIA NIM microservices on Cisco Secure AI Factory with NVIDIA, provide the **intelligence**. Splunk Agent Observability provides the **evidence**. Cisco AI Defense provides the **enforcement**. In this workshop, the prescriptive-overreach risk you measured in Lab 1 became the guardrail you enforced in Lab 2 — **one loop, from finding to guardrail.**
 
 | **Outcome** | **What it means** | **Grounded in** |
 | --- | --- | --- |

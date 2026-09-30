@@ -26,9 +26,9 @@ Actions (`.github/workflows/pages.yml`) on every push to `main` (repo Settings �
 
 - `content/_index.md` — Home (hero + the opening narrative section). **Generated** by `build_index.py`; do not hand-edit the body.
 - `content/workshops/ai-trust-open-weights/` — the workshop pages: `00-introduction.md` (the narrative source of truth),
-  `01-setup.md`, `03-lab-1-measure.md`, `04-lab-2-secure.md`, `07-wrap-up.md`, `08-reference.md`.
+  `01-setup.md`, `03-lab-1-measure.md`, `04-lab-2-secure.md`, `07-wrap-up.md`.
   Sidebar order comes from `weight` in each page's front matter.
-- `static/images/` — screenshots, referenced as `/images/image-NN.png`.
+- `static/images/` — screenshots, referenced as `/images/image-NN.png`. Screenshots pasted into the workshop folder are referenced as `/workshops/ai-trust-open-weights/image-N.png`.
 - `hugo.toml` — site config and theme params (branding, colors, layout toggles).
 
 ## Editing

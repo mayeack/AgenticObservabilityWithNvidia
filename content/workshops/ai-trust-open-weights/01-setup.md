@@ -24,7 +24,7 @@ All lab work happens in your web browser; there is nothing to install. Before yo
 
 ![alt text](/images/image-210.png)
 
-Go to https://dcloud2-sjc.cisco.com/content/instantdemo/cisco-secure-ai-factory-with-nvidia-hidden and click ***View*** to access all of the tiles you will need for these labs. There will be more tiles than you will use.
+Go to https://dcloud2-sjc.cisco.com/content/instantdemo/cisco-secure-ai-factory-with-nvidia-hidden and click **View** to access all of the tiles you will need for these labs. There will be more tiles than you will use.
 
 {{% notice note %}}
 Keep PseudoCo Assistant open in its own browser tab for the whole workshop. Both labs start in the assistant, and Lab 2 returns to it after you work in Cisco AI Defense.

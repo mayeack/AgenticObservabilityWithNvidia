@@ -5,7 +5,7 @@ duration    = "20 min"
 weight      = 40
 +++
 
-![alt text](/images/image-124.png)
+![alt text](/workshops/ai-trust-open-weights/image-22.png)
 
 **Pillar:** Secure<br>
 **Tool:** Cisco AI Defense<br>

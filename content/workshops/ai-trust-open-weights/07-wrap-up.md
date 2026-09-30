@@ -21,6 +21,6 @@ weight      = 70
 | **Improved Outcomes** | Turn AI quality, safety, and cost into measurable operating metrics, establish a baseline before release, identify emerging risks in production, and continuously improve against evidence. | Splunk Agent Observability |
 | **Trusted AI** | Turn written policy into machine-speed enforcement, detecting and blocking unsafe interactions before they create patient, regulatory, or reputational exposure. | Cisco AI Defense |
 
-**The ask.** The question is no longer *whether* to take control of the models behind your agents — it's *whether you can prove those agents deserve trust.* With NVIDIA open models providing the intelligence, Splunk Agent Observability and Cisco AI Defense give you the continuous evidence and runtime control to move AI agents from prototype to production. **Measure every interaction. Enforce what you find. Keep measuring.**
+**What's next.** The question is no longer *whether* to take control of the models behind your agents — it's *whether you can prove those agents deserve trust.* With NVIDIA open models providing the intelligence, Splunk Agent Observability and Cisco AI Defense give you the continuous evidence and runtime control to move AI agents from prototype to production. **Measure every interaction. Enforce what you find. Keep measuring.**
 
 Open weights. Continuous evidence. Runtime enforcement. **Trusted outcomes — with Cisco and NVIDIA.**

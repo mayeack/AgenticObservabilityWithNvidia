@@ -43,10 +43,10 @@ Click **Open PseudoCo Assistant**.
 
 Ensure that the following fields are set:
 
-- Application Theme: MedAdvice
-- Provider: openai
-- Model: nvidia/nemotron-3-super
-- Static Emission: gpt-4o
+**Application Theme:** MedAdvice<br>
+**Provider:** openai<br>
+**Model:** nvidia/nemotron-3-super<br>
+**Static Emission:** gpt-4o
 
 #### 1.1.2 Explore PseudoCo Assistant's Behavior
 
@@ -99,11 +99,11 @@ Ensure that the following filters are set:
 - Project: PseudoCo Assistant
 - Agent stream: MedAdvice
 
-**Overview**: Displays the selected AI project and agent stream, with filters for time range.
-**Usage and performance**: Summarizes total requests, tool and LLM failures, token consumption, and estimated agent cost.
-**Signals generated**: Surfaces detected AI trust and safety issues, including harmful responses, unlicensed medical advice, and sensitive PII.
-**Controls applied**: Shows which governance controls were triggered and whether activity was observed, denied, steered, or allowed to proceed without a trigger.
-**Evaluator trends**: Tracks evaluator results over time, including action completion, context adherence, and tool selection quality.
+**Overview:** Displays the selected AI project and agent stream, with filters for time range.<br>
+**Usage and performance:** Summarizes total requests, tool and LLM failures, token consumption, and estimated agent cost.<br>
+**Signals generated:** Surfaces detected AI trust and safety issues, including harmful responses, unlicensed medical advice, and sensitive PII.<br>
+**Controls applied:** Shows which governance controls were triggered and whether activity was observed, denied, steered, or allowed to proceed without a trigger.<br>
+**Evaluator trends:** Tracks evaluator results over time, including action completion, context adherence, and tool selection quality.
 
 ![alt text](/workshops/ai-trust-open-weights/image-20.png)
 
@@ -155,12 +155,12 @@ Click on any signal.
 
 ![alt text](/workshops/ai-trust-open-weights/image-28.png)
 
-**Signal summary**: Identifies an Unlicensed Medication Advice signal where the LLM provided prescription guidance to a user without sufficient medical or identity context.
-**Scope and impact**: Shows the affected spans, traces, and sessions associated with the signal, along with when the issue was created and last updated.
-**Root cause analysis**: Explains the behavior that triggered the signal and links it to the relevant policy or prompt enforcement gap.
-**Recommendation**: Provides a suggested remediation, in this case adding a pre-check to verify user identity before medication advice is given.
-**Evidence details**: Visualizes when affected spans occurred and provides example interactions that contributed to the signal.
-**Trace linkage**: Lets the user drill into the underlying session, trace, and span for direct investigation of the agent behavior.
+**Signal summary:** Identifies an Unlicensed Medication Advice signal where the LLM provided prescription guidance to a user without sufficient medical or identity context.<br>
+**Scope and impact:** Shows the affected spans, traces, and sessions associated with the signal, along with when the issue was created and last updated.<br>
+**Root cause analysis:** Explains the behavior that triggered the signal and links it to the relevant policy or prompt enforcement gap.<br>
+**Recommendation:** Provides a suggested remediation, in this case adding a pre-check to verify user identity before medication advice is given.<br>
+**Evidence details:** Visualizes when affected spans occurred and provides example interactions that contributed to the signal.<br>
+**Trace linkage:** Lets the user drill into the underlying session, trace, and span for direct investigation of the agent behavior.
 
 #### 1.2.5 Review Trends
 
